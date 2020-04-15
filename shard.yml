@@ -1,0 +1,9 @@
+name: mime-types
+version: 0.1.0
+
+authors:
+  - Mohamed Ben <mohamed@ipfinder.io>
+
+crystal: 0.34.0
+
+license: MIT
