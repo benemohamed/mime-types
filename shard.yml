@@ -2,7 +2,11 @@ name: mime-types
 version: 0.1.0
 
 authors:
-  - Mohamed Ben <mohamed@ipfinder.io>
+  - Mohamed Ben rebia <mohamed@ipfinder.io>
+
+targets:
+  shards:
+    main: src/mime-types.cr
 
 crystal: 0.34.0
 
