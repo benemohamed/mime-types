@@ -1,74 +1,112 @@
-require "json"
 require "./errors/MimeException"
 require "./type/type"
 
 # require "yaml"
+# require "json"
 
-#
-#  @Author: flydreame
+#  @Author: benemohamed
 #  @Date: 2020-04-15 14:44:06
-#  @Desc:
-
-# use function list
-# str.upcase
-# str.downcase
-# class Path.new(str).extension to get the extension name
-# In Crystal everything is an object
+#  @Desc: The ultimate content-type utility.
 
 module Mime
   class Mime::Type
-    @EXTRACT_TYPE_REGEXP = /^\s*([^;\s]*)(?:;|\s|$)/
-    @TEXT_TYPE_REGEXP = /^text\//i
+    @extension = Mime::EXTENSIONS
+    @type = Mime::TYPE
 
-    # @@extensions : JSON
-
-    # types : JSON::Any
-
-    # @TYPES = nil
-
-    # init
     def initialize
-      file = File.open("/var/www/github/crystalapp/mime-types/src/db.json") do |file|
-        data = JSON.parse(file)
-
-        # puts data
-      end
     end
 
-    # Get the default charset for a MIME `type`.
-    def charset(type : String)
-      if type.is_a?(String)
-        file = File.open("/var/www/github/crystalapp/mime-types/src/db.json") do |file|
-          data = JSON.parse(file)
-          # return data
+    # Create a full Content-Type header given a MIME type or extension.
+    #
+    # ```
+    # contentType = mime.contentType("markdown") # 'text/markdown; charset=utf-8'
+    # ```
+    def contentType(str : String) : Array(String) | Bool | Char | String | Nil
+      if str.is_a?(String)
+        if (str == "")
+          return false
+        else
+          # mimes
+          match = /\//.match(str)
+          if match == nil
+            mime = @type.fetch(str, str)
+
+            if mime === str
+              return false
+            end
+            if mime.size >= 0
+              return mime[0] + "; charset=utf-8"
+            else
+            end
+          else
+            # extension
+            type = str.gsub(/;(.|\n)*?$/, "")
+            extension = @extension.fetch(type, type)
+            if extension === type
+              return false
+            end
+
+            if extension.size >= 0
+              charsetmatch = /charset/.match(str)
+              if charsetmatch == nil
+                return str + "; charset=utf-8"
+              else
+                # strcharset = charsetmatch.to_s.gsub(/;(.|\n)*?$/, "")
+                return str
+              end
+            else
+              return false
+            end
+          end
         end
       end
     end
 
-    # Create a full Content-Type header given a MIME type or extension.
-    def contentType(str : String)
-      if str.is_a?(String)
-      end
-    end
-
     # Get the default extension for a MIME `type`.
-    def extension(type : String) : JSON::Any | Nil
+    #
+    # ```
+    # extension = mime.extension("application/octet-stream") # 'bin'
+    # ```
+    def extension(type : String) : Array(String) | Bool | Char | String | Nil
       if type.is_a?(String)
-        file = File.open("/var/www/github/crystalapp/mime-types/src/db.json") do |file|
-          data = JSON.parse(file)
-          return data[type]["extensions"][0]
+        if (type == "")
+          return false
+        else
+          newtype = type.gsub(/;(.|\n)*?$/, "")
+          extension = @extension.fetch(newtype.downcase, newtype.downcase)
+          if extension === type
+            return false
+          end
+          if extension.size >= 0
+            return extension[0]
+          else
+          end
         end
       end
     end
 
     # Lookup the MIME type for a file `path/extension`.
-    def lookup(path : String) : Bool | String | Nil
+    #
+    # ```
+    # lookup = mime.lookup("file.json") # 'application/json'
+    # ```
+    def lookup(path : String) : Array(String) | Bool | Char | String | Nil
       if path.is_a?(String)
-        extension = Path.new(path).extension
+        newpath = path.gsub(/^/, "xxxx")
+        extension = Path.new(newpath).extension
         if (extension == "")
           return false
         else
-          return extension.downcase
+          type = extension.downcase.delete &.in?(".")
+          mime = @type.fetch(type, type)
+
+          if mime === type
+            return false
+          end
+          if mime.size >= 0
+            return mime[0]
+          else
+          end
         end
       end
     end
@@ -76,17 +114,3 @@ module Mime
 
   VERSION = "0.1.0"
 end
-
-mime = Mime::Type.new
-# lookup = mime.lookup("file.json")                      # 'application/json'
-# extension = mime.extension("application/octet-stream") # 'bin'
-# contentType = mime.contentType("markdown")             # 'text/x-markdown; charset=utf-8'
-# charset = mime.charset("text/markdown") # UTF-8
-
-# puts lookup
-# puts mime.inspect
-
-# puts typeof(extension)
-# puts /foo|bar/.match("file.json")
-# puts "sss".upcase
-# puts Path.new("index").extension

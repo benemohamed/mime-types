@@ -1,6 +1,6 @@
 # mime-types
 
-TODO: Write a description here
+The ultimate content-type utility.
 
 ## Installation
 
@@ -18,13 +18,40 @@ TODO: Write a description here
 
 ```crystal
 require "mime-types"
+mime = Mime::Type.new
 ```
 
-TODO: Write usage instructions here
+### mime.lookup(path)
+
+```crystal
+lookup = mime.lookup("file.json") # 'application/json'
+```
+
+### mime.contentType(type)
+
+```crystal
+contentType = mime.contentType("markdown") # 'text/markdown; charset=utf-8'
+```
+
+### mime.extension(type)
+
+```crystal
+extension = mime.extension("application/octet-stream") # 'bin'
+```
+
+### type = mime::types
+
+A map of content-types by extension.
+
+### extensions = mime::extensions
+
+A map of extensions by content-type.
 
 ## Development
 
-TODO: Write development instructions here
+```bash
+crystal spec
+```
 
 ## Contributing
 
@@ -37,3 +64,7 @@ TODO: Write development instructions here
 ## Contributors
 
 - [Mohamed Ben](https://github.com/benemohamed) - creator and maintainer
+
+## License
+
+[![GitHub license](https://img.shields.io/github/license/benemohamed/mime-types.svg)](https://github.com/benemohamed/mime-types)
