@@ -1,6 +1,6 @@
 # mime-types
 
-The ultimate content-type utility.
+The ultimate content-type utility - Inspired by [mime-types javascript](https://github.com/jshttp/mime-types).
 
 ## Installation
 
